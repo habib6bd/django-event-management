@@ -1,0 +1,46 @@
+{% extends 'events/base.html' %}
+
+{% block title %}Event List{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">Event List</h1>
+
+<!-- Category Filter -->
+<div class="flex space-x-4 mb-6">
+    <a href="{% url 'event_list' %}" 
+    class="px-4 py-2 rounded-lg {% if not selected_category %}bg-blue-500 text-white{% else %}bg-gray-200 text-black{% endif %}"
+>
+        All ({{ events|length }})
+    </a>
+    {% if categories %}
+    {% for category in categories %}
+        <a href="?category={{ category.id }}" 
+           class="px-4 py-2 rounded-lg 
+                  {% if selected_category == category.id %}bg-blue-500 text-white{% else %}bg-gray-200 text-black{% endif %}">
+            {{ category.name }} ({{ category.events.count }})
+        </a>
+    {% endfor %}
+{% else %}
+    <p>No categories available.</p>
+{% endif %}
+</div>
+
+<!-- Event List -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for event in events %}
+        <div class="p-4 bg-white shadow-lg rounded-lg">
+            <h2 class="text-xl font-semibold">{{ event.name }}</h2>
+            <p class="text-gray-600">{{ event.description }}</p>
+            <p class="text-sm text-gray-500">Date: {{ event.date }} | Time: {{ event.time }}</p>
+            <p class="text-sm text-gray-500">Location: {{ event.location }}</p>
+            <p class="text-sm text-blue-500">Category: {{ event.category.name }}</p>
+        </div>
+    {% empty %}
+        <p class="text-gray-500">No events found in this category.</p>
+    {% endfor %}
+</div>
+
+<a href="{% url 'create_event' %}" class="inline-block mt-6 bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-lg">
+    Create New Event
+</a>
+{% endblock %}
