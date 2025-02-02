@@ -68,3 +68,54 @@ def filter_events(request):
         events = events.filter(date__range=[start_date, end_date])
 
     return render(request, 'events/event_list.html', {'events': events})
+
+def dashboard(request):
+    filter_type = request.GET.get('filter', 'today')  # Default to today's events
+
+    # Statistics
+    total_participants = Participant.objects.count()
+    total_events = Event.objects.count()
+    upcoming_events = Event.objects.filter(date__gt=timezone.now().date()).count()
+    past_events = Event.objects.filter(date__lt=timezone.now().date()).count()
+
+    # Filtering Logic
+    if filter_type == 'participants':
+        participants = Participant.objects.all()
+        title = "Total Participants"
+        context = {
+            'title': title,
+            'participants': participants,  # Pass participants
+        }
+    
+    elif filter_type == 'upcoming':
+        filtered_events = Event.objects.filter(date__gt=timezone.now().date())
+        title = "Upcoming Events"
+        context = {
+            'title': title,
+            'filtered_events': filtered_events,
+        }
+    elif filter_type == 'past':
+        filtered_events = Event.objects.filter(date__lt=timezone.now().date())
+        title = "Past Events"
+        context = {
+            'title': title,
+            'filtered_events': filtered_events,
+        }
+    else:
+        # Default (Today's Events)
+        todays_events = Event.objects.filter(date=timezone.now().date())
+        title = "Today's Events"
+        context = {
+            'title': title,
+            'todays_events': todays_events,
+        }
+
+    # Add stats to context
+    context.update({
+        'total_participants': total_participants,
+        'total_events': total_events,
+        'upcoming_events': upcoming_events,
+        'past_events': past_events,
+    })
+
+    return render(request, 'events/dashboard.html', context)

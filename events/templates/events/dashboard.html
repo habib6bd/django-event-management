@@ -1,0 +1,64 @@
+{% extends 'events/base.html' %}
+{% load static %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto p-6">
+    <h1 class="text-3xl font-semibold mb-6">Dashboard</h1>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-xl shadow cursor-pointer" onclick="location.href='?filter=participants'">
+            <h3 class="text-sm text-gray-500">Total Participants</h3>
+            <p class="text-3xl font-bold">{{ total_participants }}</p>
+        </div>
+        <!-- Total Events -->
+        <div class="bg-white p-6 rounded-xl shadow cursor-pointer" onclick="location.href='?filter=all'">
+            <h3 class="text-sm text-gray-500">Total Events</h3>
+            <p class="text-3xl font-bold">{{ total_events }}</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow cursor-pointer" onclick="location.href='?filter=upcoming'">
+            <h3 class="text-sm text-gray-500">Upcoming Events</h3>
+            <p class="text-3xl font-bold">{{ upcoming_events }}</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow cursor-pointer" onclick="location.href='?filter=past'">
+            <h3 class="text-sm text-gray-500">Past Events</h3>
+            <p class="text-3xl font-bold">{{ past_events }}</p>
+        </div>
+    </div>
+
+    <!-- Dynamic Title -->
+    <h2 class="text-2xl font-semibold mb-4">{{ title }}</h2>
+
+    <!-- Dynamic List -->
+    <div class="bg-white rounded-xl shadow p-4">
+        {% if participants %}
+            <ul>
+                {% for participant in participants %}
+                    <li class="border-b py-2">
+                        <strong>{{ participant.name }}</strong> - {{ participant.email }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% elif filtered_events %}
+            <ul>
+                {% for event in filtered_events %}
+                    <li class="border-b py-2">
+                        <strong>{{ event.name }}</strong> - {{ event.date }} at {{ event.location }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% elif todays_events %}
+            <ul>
+                {% for event in todays_events %}
+                    <li class="border-b py-2">
+                        <strong>{{ event.name }}</strong> - {{ event.time }} at {{ event.location }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No data to display.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
