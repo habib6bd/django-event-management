@@ -1,25 +1,55 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Event, Category, Participant
 from .forms import EventForm
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.utils import timezone
 
 # List Events with optimized queries
 def event_list(request):
-    category_id = request.GET.get('category')
+    events = Event.objects.all()
     categories = Category.objects.all()
-    
-    if category_id:
-        events = Event.objects.filter(category_id=category_id)
-    else:
-        events = Event.objects.all()
+
+    # Get query parameters
+    selected_category = request.GET.get('category')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    search_query = request.GET.get('search')  # Capture search input
+
+    # Filter by category
+    if selected_category:
+        events = events.filter(category_id=selected_category)
+
+    # Filter by date range
+    if start_date and end_date:
+        events = events.filter(date__range=[start_date, end_date])
+    elif start_date:
+        events = events.filter(date__gte=start_date)
+    elif end_date:
+        events = events.filter(date__lte=end_date)
+
+    # Search by name or location
+    if search_query:
+        events = events.filter(
+            Q(name__icontains=search_query) | Q(location__icontains=search_query)
+        )
 
     context = {
-        'categories': categories,
         'events': events,
-        'selected_category': int(category_id) if category_id else None,
+        'categories': categories,
+        'selected_category': int(selected_category) if selected_category else None,
     }
     return render(request, 'events/event_list.html', context)
+
+def event_detail(request, pk):
+    event = get_object_or_404(Event, pk=pk)
+    participants = event.participants.all()  # Get participants for this event
+
+    context = {
+        'event': event,
+        'participants': participants,
+    }
+    return render(request, 'events/event_detail.html', context)
+    
 # Create Event
 def event_create(request):
     if request.method == 'POST':
@@ -38,7 +68,7 @@ def event_update(request, pk):
         form = EventForm(request.POST, instance=event)
         if form.is_valid():
             form.save()
-            return redirect('event_list')
+            return redirect('dashboard')  # Redirect to dashboard
     else:
         form = EventForm(instance=event)
     return render(request, 'events/event_form.html', {'form': form})
@@ -48,7 +78,7 @@ def event_delete(request, pk):
     event = get_object_or_404(Event, pk=pk)
     if request.method == 'POST':
         event.delete()
-        return redirect('event_list')
+        return redirect('dashboard')  # Redirect to dashboard
     return render(request, 'events/event_confirm_delete.html', {'event': event})
 
 def total_participants(request):
@@ -84,9 +114,9 @@ def dashboard(request):
         title = "Total Participants"
         context = {
             'title': title,
-            'participants': participants,  # Pass participants
+            'participants': participants,
         }
-    
+
     elif filter_type == 'upcoming':
         filtered_events = Event.objects.filter(date__gt=timezone.now().date())
         title = "Upcoming Events"
@@ -94,6 +124,7 @@ def dashboard(request):
             'title': title,
             'filtered_events': filtered_events,
         }
+
     elif filter_type == 'past':
         filtered_events = Event.objects.filter(date__lt=timezone.now().date())
         title = "Past Events"
@@ -101,8 +132,17 @@ def dashboard(request):
             'title': title,
             'filtered_events': filtered_events,
         }
+
+    elif filter_type == 'all':  # ✅ Added condition for Total Events
+        filtered_events = Event.objects.all()
+        title = "Total Events"
+        context = {
+            'title': title,
+            'filtered_events': filtered_events,
+        }
+
     else:
-        # Default (Today's Events)
+        # Default: Today's Events
         todays_events = Event.objects.filter(date=timezone.now().date())
         title = "Today's Events"
         context = {
@@ -119,3 +159,4 @@ def dashboard(request):
     })
 
     return render(request, 'events/dashboard.html', context)
+

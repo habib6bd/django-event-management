@@ -5,6 +5,41 @@
 {% block content %}
 <h1 class="text-2xl font-bold mb-4">Event List</h1>
 
+<!-- Search & Filter Form -->
+<form method="get" class="flex flex-wrap space-x-4 mb-6 items-center">
+    <!-- Search Bar -->
+    <div>
+        <label for="search" class="block text-sm font-medium text-gray-700">Search Event</label>
+        <input type="text" name="search" id="search" 
+               placeholder="Search by name or location" 
+               value="{{ request.GET.search }}" 
+               class="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+
+    <!-- Date Filters -->
+    <div>
+        <label for="start_date" class="block text-sm font-medium text-gray-700">Start Date</label>
+        <input type="date" name="start_date" id="start_date" 
+               value="{{ request.GET.start_date }}" 
+               class="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+
+    <div>
+        <label for="end_date" class="block text-sm font-medium text-gray-700">End Date</label>
+        <input type="date" name="end_date" id="end_date" 
+               value="{{ request.GET.end_date }}" 
+               class="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+
+    <!-- Filter Button -->
+    <div class="flex items-end">
+        <button type="submit" 
+                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            Search
+        </button>
+    </div>
+</form>
+
 <!-- Category Filter -->
 <div class="flex space-x-4 mb-6">
     <a href="{% url 'event_list' %}" 
@@ -28,6 +63,7 @@
 <!-- Event List -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     {% for event in events %}
+    <a href="{% url 'event_detail' event.pk %}" class="text-blue-600 hover:underline">
         <div class="p-4 bg-white shadow-lg rounded-lg">
             <h2 class="text-xl font-semibold">{{ event.name }}</h2>
             <p class="text-gray-600">{{ event.description }}</p>
@@ -35,12 +71,9 @@
             <p class="text-sm text-gray-500">Location: {{ event.location }}</p>
             <p class="text-sm text-blue-500">Category: {{ event.category.name }}</p>
         </div>
+    </a>
     {% empty %}
         <p class="text-gray-500">No events found in this category.</p>
     {% endfor %}
 </div>
-
-<a href="{% url 'create_event' %}" class="inline-block mt-6 bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-lg">
-    Create New Event
-</a>
 {% endblock %}
