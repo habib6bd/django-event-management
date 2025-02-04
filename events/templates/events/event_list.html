@@ -6,58 +6,69 @@
 <h1 class="text-2xl font-bold mb-4">Event List</h1>
 
 <!-- Search & Filter Form -->
-<form method="get" class="flex flex-wrap space-x-4 mb-6 items-center">
+<form method="get" class="w-full md:w-1/2 mx-auto flex flex-wrap mb-6 items-center">
     <!-- Search Bar -->
-    <div>
-        <label for="search" class="block text-sm font-medium text-gray-700">Search Event</label>
-        <input type="text" name="search" id="search" 
-               placeholder="Search by name or location" 
-               value="{{ request.GET.search }}" 
-               class="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <div class="flex items-center space-x-4 pr-10">
+        <div>
+            <label for="search" class="block text-sm font-medium text-gray-700">Search Event</label>
+            <input type="text" name="search" id="search" 
+                   placeholder="Search by name or location" 
+                   value="{{ request.GET.search }}" 
+                   class="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <!-- Search Button -->
+        <div>
+            <button type="submit" 
+                    class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-5">
+                Search
+            </button>
+        </div>
     </div>
 
     <!-- Date Filters -->
-    <div>
-        <label for="start_date" class="block text-sm font-medium text-gray-700">Start Date</label>
-        <input type="date" name="start_date" id="start_date" 
-               value="{{ request.GET.start_date }}" 
-               class="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-    </div>
+    <div class="flex items-center space-x-4 mt-4">
+        <div>
+            <label for="start_date" class="block text-sm font-medium text-gray-700">Start Date</label>
+            <input type="date" name="start_date" id="start_date" 
+                   value="{{ request.GET.start_date }}" 
+                   class="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
 
-    <div>
-        <label for="end_date" class="block text-sm font-medium text-gray-700">End Date</label>
-        <input type="date" name="end_date" id="end_date" 
-               value="{{ request.GET.end_date }}" 
-               class="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-    </div>
+        <div>
+            <label for="end_date" class="block text-sm font-medium text-gray-700">End Date</label>
+            <input type="date" name="end_date" id="end_date" 
+                   value="{{ request.GET.end_date }}" 
+                   class="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
 
-    <!-- Filter Button -->
-    <div class="flex items-end">
-        <button type="submit" 
-                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-            Search
-        </button>
+        <!-- Filter Button -->
+        <div>
+            <button type="submit" 
+                    class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-5">
+                Filter
+            </button>
+        </div>
     </div>
 </form>
 
 <!-- Category Filter -->
-<div class="flex space-x-4 mb-6">
+<div class="flex space-x-4 mb-6 mx-auto">
     <a href="{% url 'event_list' %}" 
-    class="px-4 py-2 rounded-lg {% if not selected_category %}bg-blue-500 text-white{% else %}bg-gray-200 text-black{% endif %}"
->
+       class="px-4 py-2 rounded-lg {% if not selected_category %}bg-blue-500 text-white{% else %}bg-gray-200 text-black{% endif %}">
         All ({{ events|length }})
     </a>
     {% if categories %}
-    {% for category in categories %}
-        <a href="?category={{ category.id }}" 
-           class="px-4 py-2 rounded-lg 
-                  {% if selected_category == category.id %}bg-blue-500 text-white{% else %}bg-gray-200 text-black{% endif %}">
-            {{ category.name }} ({{ category.events.count }})
-        </a>
-    {% endfor %}
-{% else %}
-    <p>No categories available.</p>
-{% endif %}
+        {% for category in categories %}
+            <a href="?category={{ category.id }}" 
+               class="px-4 py-2 rounded-lg 
+                      {% if selected_category == category.id %}bg-blue-500 text-white{% else %}bg-gray-200 text-black{% endif %}">
+                {{ category.name }} ({{ category.events.count }})
+            </a>
+        {% endfor %}
+    {% else %}
+        <p>No categories available.</p>
+    {% endif %}
 </div>
 
 <!-- Event List -->

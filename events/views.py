@@ -4,16 +4,13 @@ from .forms import EventForm
 from django.db.models import Count, Q
 from django.utils import timezone
 
-# List Events with optimized queries
-def event_list(request):
-    events = Event.objects.all()
-    categories = Category.objects.all()
 
-    # Get query parameters
+def event_list(request):
+    events = Event.objects.select_related('category').prefetch_related('participants')
     selected_category = request.GET.get('category')
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
-    search_query = request.GET.get('search')  # Capture search input
+    search_query = request.GET.get('search') 
 
     # Filter by category
     if selected_category:
@@ -33,6 +30,8 @@ def event_list(request):
             Q(name__icontains=search_query) | Q(location__icontains=search_query)
         )
 
+    categories = Category.objects.all()
+
     context = {
         'events': events,
         'categories': categories,
@@ -41,12 +40,10 @@ def event_list(request):
     return render(request, 'events/event_list.html', context)
 
 def event_detail(request, pk):
-    event = get_object_or_404(Event, pk=pk)
-    participants = event.participants.all()  # Get participants for this event
-
+    event = get_object_or_404(Event.objects.prefetch_related('participants'), pk=pk)
     context = {
         'event': event,
-        'participants': participants,
+        'participants': event.participants.all(),
     }
     return render(request, 'events/event_detail.html', context)
     
@@ -68,7 +65,7 @@ def event_update(request, pk):
         form = EventForm(request.POST, instance=event)
         if form.is_valid():
             form.save()
-            return redirect('dashboard')  # Redirect to dashboard
+            return redirect('dashboard')  
     else:
         form = EventForm(instance=event)
     return render(request, 'events/event_form.html', {'form': form})
@@ -78,7 +75,7 @@ def event_delete(request, pk):
     event = get_object_or_404(Event, pk=pk)
     if request.method == 'POST':
         event.delete()
-        return redirect('dashboard')  # Redirect to dashboard
+        return redirect('dashboard') 
     return render(request, 'events/event_confirm_delete.html', {'event': event})
 
 def total_participants(request):
@@ -100,15 +97,12 @@ def filter_events(request):
     return render(request, 'events/event_list.html', {'events': events})
 
 def dashboard(request):
-    filter_type = request.GET.get('filter', 'today')  # Default to today's events
-
-    # Statistics
+    filter_type = request.GET.get('filter', 'today')
     total_participants = Participant.objects.count()
     total_events = Event.objects.count()
     upcoming_events = Event.objects.filter(date__gt=timezone.now().date()).count()
     past_events = Event.objects.filter(date__lt=timezone.now().date()).count()
 
-    # Filtering Logic
     if filter_type == 'participants':
         participants = Participant.objects.all()
         title = "Total Participants"
@@ -118,7 +112,7 @@ def dashboard(request):
         }
 
     elif filter_type == 'upcoming':
-        filtered_events = Event.objects.filter(date__gt=timezone.now().date())
+        filtered_events = Event.objects.filter(date__gt=timezone.now().date()).select_related('category').prefetch_related('participants')
         title = "Upcoming Events"
         context = {
             'title': title,
@@ -126,15 +120,15 @@ def dashboard(request):
         }
 
     elif filter_type == 'past':
-        filtered_events = Event.objects.filter(date__lt=timezone.now().date())
+        filtered_events = Event.objects.filter(date__lt=timezone.now().date()).select_related('category').prefetch_related('participants')
         title = "Past Events"
         context = {
             'title': title,
             'filtered_events': filtered_events,
         }
 
-    elif filter_type == 'all':  # ✅ Added condition for Total Events
-        filtered_events = Event.objects.all()
+    elif filter_type == 'all':
+        filtered_events = Event.objects.all().select_related('category').prefetch_related('participants')
         title = "Total Events"
         context = {
             'title': title,
@@ -142,15 +136,13 @@ def dashboard(request):
         }
 
     else:
-        # Default: Today's Events
-        todays_events = Event.objects.filter(date=timezone.now().date())
+        todays_events = Event.objects.filter(date=timezone.now().date()).select_related('category').prefetch_related('participants')
         title = "Today's Events"
         context = {
             'title': title,
             'todays_events': todays_events,
         }
 
-    # Add stats to context
     context.update({
         'total_participants': total_participants,
         'total_events': total_events,

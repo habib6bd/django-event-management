@@ -1,24 +1,112 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Event Management{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "css/output.css" %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
-<body class="bg-gray-100 p-4">
-    <nav class="bg-blue-500 p-4 text-white">
-        <ul class="flex space-x-4">
-            <li><a href="{% url 'event_list' %}" class="hover:underline">Events</a></li>
-            {% comment %} <li><a href="{% url 'category_list' %}" class="hover:underline">Categories</a></li>
-            <li><a href="{% url 'participant_list' %}" class="hover:underline">Participants</a></li> {% endcomment %}
-        </ul>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-blue-600 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0 text-xl font-bold">
+                    <a href="{% url 'event_list' %}">EventBD</a>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="hidden md:flex space-x-6">
+                    <a href="{% url 'event_list' %}" class="hover:bg-blue-700 px-3 py-2 rounded">Home</a>
+                    <a href="{% url 'dashboard' %}" class="hover:bg-blue-700 px-3 py-2 rounded">Dashboard</a>
+                    <a href="#" class="hover:bg-blue-700 px-3 py-2 rounded">About</a>
+                    <a href="#" class="hover:bg-blue-700 px-3 py-2 rounded">Contact</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="menu-toggle" class="focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-blue-700">
+            <a href="{% url 'event_list' %}" class="block px-4 py-2 hover:bg-blue-800">Home</a>
+            <a href="{% url 'dashboard' %}" class="block px-4 py-2 hover:bg-blue-800">Dashboard</a>
+            <a href="#" class="block px-4 py-2 hover:bg-blue-800">About</a>
+            <a href="#" class="block px-4 py-2 hover:bg-blue-800">Contact</a>
+        </div>
     </nav>
 
-    <div class="container mx-auto mt-4">
-        {% block content %}
-        <!-- Child templates will inject content here -->
-        {% endblock %}
+    <!-- Main Content -->
+    <div class="p-4">
+        {% block content %}{% endblock %}
     </div>
+
+     <!-- Footer Section -->
+        <footer class="bg-gray-800 text-white py-6 mt-8">
+            <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- About Section -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">EventBD</h3>
+                    <p class="text-gray-400 text-sm">Organize, manage, and track events efficiently.</p>
+                </div>
+        
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Quick Links</h3>
+                    <ul class="space-y-1">
+                        <li><a href="{% url 'event_list' %}" class="hover:text-blue-400">Home</a></li>
+                        <li><a href="{% url 'dashboard' %}" class="hover:text-blue-400">Dashboard</a></li>
+                        <li><a href="{% url 'create_event' %}" class="hover:text-blue-400">Create Event</a></li>
+                    </ul>
+                </div>
+        
+                <!-- Social Media Icons -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Follow Us</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="hover:text-blue-400" aria-label="Facebook">
+                            <i class="fab fa-facebook-f text-2xl"></i>
+                        </a>
+                        <a href="#" class="hover:text-blue-400" aria-label="Twitter">
+                            <i class="fab fa-twitter text-2xl"></i>
+                        </a>
+                        <a href="#" class="hover:text-pink-400" aria-label="Instagram">
+                            <i class="fab fa-instagram text-2xl"></i>
+                        </a>
+                        <a href="#" class="hover:text-blue-500" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in text-2xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="text-center text-gray-500 text-sm mt-4">
+                © {{ now|date:"Y" }} Event Management System. All rights reserved.
+            </div>
+        </footer>
+    </div>
+    <!-- Mobile Menu Toggle Script -->
+    <script>
+        document.getElementById('menu-toggle').addEventListener('click', function () {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+    </script>
+
 </body>
 </html>
