@@ -10,6 +10,7 @@
 </head>
 
 <body>
+  <div class="w-1/2 mx-auto">
     <h1>Welcome to Authentication System</h1>
     <div>
         {% if form.non_field_errors %}
@@ -32,9 +33,10 @@
               {% endif %}
             </p>
             {% endfor %}
-            <button type="submit">Sign Up</button>
+            <button class="px-2 py-1 bg-green-500 :hover bg-green-600 rounded-md text-white" type="submit">Sign Up</button>
         </form>
     </div>
+  </div>
 </body>
 
 </html>
