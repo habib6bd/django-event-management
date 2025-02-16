@@ -4,7 +4,15 @@
 
 {% block content %}
 <h1 class="text-2xl font-bold mb-4">Event List</h1>
-
+{% if messages %}
+    <div class="p-4">
+        {% for message in messages %}
+            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 my-2 rounded">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
 <!-- Search & Filter Form -->
 <form method="get" class="w-full md:w-1/2 mx-auto flex flex-wrap mb-6 items-center">
     <!-- Search Bar -->

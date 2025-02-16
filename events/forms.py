@@ -1,5 +1,6 @@
 from django import forms
-from events.models import Event, Participant
+from events.models import Event
+from django.contrib.auth.models import User
 
 # Styled Form Mixin
 class StyledFormMixin:
@@ -41,14 +42,14 @@ class StyledFormMixin:
 # Event Model Form with Styling
 class EventForm(StyledFormMixin, forms.ModelForm):
     participants = forms.ModelMultipleChoiceField(
-        queryset=Participant.objects.all(),
+        queryset=User.objects.all(),
         widget=forms.SelectMultiple(attrs={'class': 'border-2 border-gray-300 w-full p-3 rounded-lg'}),  
         required=False
     )
 
     class Meta:
         model = Event
-        fields = ['name', 'description', 'date', 'time', 'location', 'category', 'participants']
+        fields = ['name', 'description', 'date', 'time', 'location', 'category', 'asset']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
             'time': forms.TimeInput(attrs={'type': 'time'}),

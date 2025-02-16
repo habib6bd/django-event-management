@@ -12,7 +12,7 @@
       <nav class="container mx-auto px-6 py-3">
         <div class="flex justify-between items-center">
           <a href="index.html" class="text-xl font-bold text-gray-800"
-            >Taskify</a
+            >EventBd</a
           >
           <div class="hidden md:flex space-x-4">
             <a
@@ -20,7 +20,7 @@
               class="text-gray-600 hover:text-gray-800"
               >Dashboard</a
             >
-            <a href="#" class="text-gray-600 hover:text-gray-800">Tasks</a>
+            <a href="{% url 'event_list' %}" class="text-gray-600 hover:text-gray-800">Events</a>
             <a href="{% url 'group-list' %}" class="text-gray-600 hover:text-gray-800"
               >Groups</a
             >
@@ -38,7 +38,7 @@
               >
                 <img
                   class="h-8 w-8 rounded-full object-cover"
-                  src="https://placekitten.com/100/100"
+                  src="events-asset/user_default.png"
                   alt="User avatar"
                 />
               </button>
@@ -85,11 +85,11 @@
           </div>
         </div>
         <div id="mobile-menu" class="md:hidden hidden mt-4">
-          <a href="#" class="block py-2 text-gray-600 hover:text-gray-800"
+          <a href="{% url 'admin-dashboard' %}" class="block py-2 text-gray-600 hover:text-gray-800"
             >Dashboard</a
           >
-          <a href="#" class="block py-2 text-gray-600 hover:text-gray-800"
-            >Tasks</a
+          <a href="{% url 'event_list' %}" class="block py-2 text-gray-600 hover:text-gray-800"
+            >Events</a
           >
           <a href="{% url 'group-list' %}" class="block py-2 text-gray-600 hover:text-gray-800"
             >Groups</a
