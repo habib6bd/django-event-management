@@ -11,7 +11,7 @@ urlpatterns = [
     path('organizer-dashboard/', dashboard, name='organizer-dashboard'),
     path('events/<int:pk>/', event_detail, name='event_detail'),
     path('events/<int:pk>/rsvp/', rsvp_event, name='rsvp_event'), 
-    path('participant-dashboard/', rsvped_events, name='my_rsvps'),
+    path('participant-dashboard/', rsvped_events, name='participant-dashboard'),
 ]
 
 

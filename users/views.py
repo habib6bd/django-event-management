@@ -14,6 +14,23 @@ from django.db.models import Prefetch
 def is_admin(user):
     return user.groups.filter(name='Admin').exists()
 
+# def sign_up(request):
+#     form = CustomRegistrationForm()
+#     if request.method == 'POST':
+#         form = CustomRegistrationForm(request.POST)
+#         if form.is_valid():
+#             user = form.save(commit=False)
+#             user.set_password(form.cleaned_data.get('password1'))
+#             user.is_active = False
+#             user.save()
+#             print(f"User created: {user.username}, Email: {user.email}")
+#             messages.success(request, 'A confirmation mail sent. Please check your email')
+#             return redirect('sign-in')
+#         else:
+#             print("Form is not valid")
+            
+#     return render(request, 'registration/register.html', {"form": form})
+
 def sign_up(request):
     form = CustomRegistrationForm()
     if request.method == 'POST':
@@ -21,14 +38,18 @@ def sign_up(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.set_password(form.cleaned_data.get('password1'))
-            user.is_active = False
+            user.is_active = False  # Keep inactive until email confirmation
             user.save()
-            print(f"User created: {user.username}, Email: {user.email}")
-            messages.success(request, 'A confirmation mail sent. Please check your email')
-            return redirect('sign-in')
-        else:
-            print("Form is not valid")
             
+            # Ensure the user is ONLY in the Participant group
+            user.groups.clear()  # Remove any default groups
+            participant_group, created = Group.objects.get_or_create(name="Participant")
+            user.groups.add(participant_group)
+
+            print(f"User created: {user.username}, Email: {user.email}")
+            messages.success(request, 'A confirmation email has been sent. Please check your email.')
+            return redirect('sign-in')
+
     return render(request, 'registration/register.html', {"form": form})
 
 def sign_in(request):

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <!-- Hero Section -->
-<section class="bg-blue-600 text-white py-32 md:py-40">
+<section class="bg-blue-500 text-white py-32 md:py-40 ">
     <div class="container mx-auto px-6 text-center">
         <h1 class="text-4xl md:text-5xl font-bold mb-6">
             Discover & Manage Events with Ease
@@ -73,23 +73,3 @@
 {% endblock content %}
 
 
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Welcome home</h1>
-    {% if user.is_authenticated %}
-    {{user}}
-    <form action="{% url 'logout' %}" method="POST">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-    </form>
-    {% else %}
-      Annoymous
-    {% endif %}
-</body>
-</html> -->
