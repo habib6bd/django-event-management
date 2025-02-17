@@ -1,0 +1,75 @@
+    <!-- Navbar -->
+<nav class="bg-blue-600 text-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex justify-between items-center h-16">
+            <!-- Logo -->
+            <div class="flex-shrink-0 text-xl font-bold">
+                <a href="{% url 'event_list' %}">EventBD</a>
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="hidden md:flex space-x-6">
+                <a href="{% url 'event_list' %}" class="hover:bg-blue-700 px-3 py-2 rounded">Home</a>
+                <a href="{% url 'dashboard' %}" class="hover:bg-blue-700 px-3 py-2 rounded">Dashboard</a>
+                <a href="#" class="hover:bg-blue-700 px-3 py-2 rounded">About</a>
+                <a href="#" class="hover:bg-blue-700 px-3 py-2 rounded">Contact</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden flex items-center">
+                <button id="menu-toggle" class="focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-blue-700">
+        <a href="{% url 'event_list' %}" class="block px-4 py-2 hover:bg-blue-800">Home</a>
+        <a href="{% url 'dashboard' %}" class="block px-4 py-2 hover:bg-blue-800">Dashboard</a>
+        <a href="#" class="block px-4 py-2 hover:bg-blue-800">About</a>
+        <a href="#" class="block px-4 py-2 hover:bg-blue-800">Contact</a>
+    </div>
+</nav>
+
+
+
+
+{% block content %}
+
+        <div class="container mx-auto px-4 py-6">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Your RSVP'd Events</h2>
+        
+            {% if events %}
+            <div class="grid md:grid-cols-3 sm:grid-cols-2 gap-6">
+                {% for event in events %}
+                <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800">
+                            <a href="{% url 'event_detail' event.pk %}" class="hover:text-blue-500">
+                                {{ event.name }}
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 text-sm">{{ event.date }} at {{ event.time }}</p>
+                        <div class="mt-3">
+                            <a href="{% url 'event_detail' event.pk %}" class="text-blue-500 text-sm font-medium">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-gray-500">You haven't RSVP'd for any events yet.</p>
+            {% endif %}
+        
+            <div class="mt-6">
+                <a href="{% url 'event_list' %}" class="text-blue-500 hover:underline">← Back to Events</a>
+            </div>
+        </div>
+        {% endblock %}

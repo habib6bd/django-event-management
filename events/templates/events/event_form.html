@@ -1,11 +1,11 @@
-{% extends 'events/base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}Create Event{% endblock %}
 
 {% block content %}
 <h1 class="text-2xl font-bold mb-4">Create Event</h1>
 
-<form method="post" class="bg-white p-6 rounded-lg shadow-md space-y-4">
+<form method="post" enctype="multipart/form-data" class="bg-white p-6 rounded-lg shadow-md space-y-4">
     {% csrf_token %}
     
     <div class="w-1/2 mx-auto mt-8">
@@ -38,6 +38,10 @@
         <label for="id_category" class="block text-gray-700 font-medium">Category</label>
         {{ form.category }}
         
+    </div>
+    <div>
+        <label for="id_participants" class="block text-gray-700 font-medium">Asset</label>
+        {{ form.asset }}
     </div>
     <div>
         <label for="id_participants" class="block text-gray-700 font-medium">Participants</label>
