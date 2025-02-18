@@ -7,7 +7,7 @@ from django.contrib import messages
 from .models import Event, Category
 from .forms import EventForm
 
-# Event List (Accessible to all)
+@login_required
 def event_list(request):
     events = Event.objects.select_related('category')
     selected_category = request.GET.get('category')
@@ -36,7 +36,7 @@ def event_list(request):
     }
     return render(request, 'events/event_list.html', context)
 
-# Event Detail (Accessible to all)
+@login_required
 def event_detail(request, pk):
     event = get_object_or_404(Event, pk=pk)
     context = {'event': event}
