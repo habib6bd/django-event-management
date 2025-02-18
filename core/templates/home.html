@@ -1,75 +1,119 @@
 {% extends "base.html" %}
 {% block content %}
+{% load static %}
+
 <!-- Hero Section -->
-<section class="bg-blue-500 text-white py-32 md:py-40 ">
-    <div class="container mx-auto px-6 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold mb-6">
+<section class="hero-section relative bg-cover bg-center bg-no-repeat text-white py-32 md:py-40">
+    <div class="container mx-auto px-6 text-center relative">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6 text-blue-600">
             Discover & Manage Events with Ease
         </h1>
-        <p class="text-xl mb-12">
+        <p class="text-lg md:text-xl mb-8 max-w-2xl mx-auto text-blue-600">
             Join or organize events effortlessly with our powerful event management system.
         </p>
-        <a href="#" class="bg-white text-blue-600 px-8 py-4 rounded-md font-semibold text-lg hover:bg-gray-100 transition duration-300">
+        <a href="#" class="bg-white text-blue-600 px-6 py-3 rounded-md font-semibold text-lg hover:bg-gray-100 transition duration-300">
             Get Started
         </a>
     </div>
 </section>
 
 <!-- Features Section -->
-<section class="py-24 md:py-32">
+<section class="py-24 md:py-32 bg-gray-100">
     <div class="container mx-auto px-6">
-        <h2 class="text-3xl font-bold text-center mb-16">
+        <h2 class="text-3xl font-bold text-center mb-12">
             Designed for Every Role
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <!-- Admin Card -->
-            <div class="bg-white rounded-lg shadow-md p-8">
-                <h3 class="text-2xl font-semibold mb-6">Admin</h3>
-                <ul class="list-disc list-inside text-gray-600 space-y-3">
-                    <li>Manage users and roles</li>
-                    <li>Oversee all events</li>
-                    <li>Generate reports and analytics</li>
-                    <li>Ensure platform security</li>
-                </ul>
+            <!-- Admin -->
+            <div class="bg-white rounded-lg shadow-md p-8 text-center">
+                <div class="text-4xl text-blue-600 mb-4">👑</div>
+                <h3 class="text-2xl font-semibold mb-4">Admin</h3>
+                <p class="text-gray-600">Manage users, events, and reports with full control.</p>
             </div>
-            <!-- Organizer Card -->
-            <div class="bg-white rounded-lg shadow-md p-8">
-                <h3 class="text-2xl font-semibold mb-6">Organizer</h3>
-                <ul class="list-disc list-inside text-gray-600 space-y-3">
-                    <li>Create and manage events</li>
-                    <li>Track registrations and attendees</li>
-                    <li>Customize event details</li>
-                    <li>Communicate with participants</li>
-                </ul>
+            <!-- Organizer -->
+            <div class="bg-white rounded-lg shadow-md p-8 text-center">
+                <div class="text-4xl text-green-600 mb-4">🎤</div>
+                <h3 class="text-2xl font-semibold mb-4">Organizer</h3>
+                <p class="text-gray-600">Create and manage events, track attendees, and send updates.</p>
             </div>
-            <!-- Participant Card -->
-            <div class="bg-white rounded-lg shadow-md p-8">
-                <h3 class="text-2xl font-semibold mb-6">Participant</h3>
-                <ul class="list-disc list-inside text-gray-600 space-y-3">
-                    <li>Explore upcoming events</li>
-                    <li>Register and attend with ease</li>
-                    <li>Receive event updates</li>
-                    <li>Engage with organizers and attendees</li>
-                </ul>
+            <!-- Participant -->
+            <div class="bg-white rounded-lg shadow-md p-8 text-center">
+                <div class="text-4xl text-purple-600 mb-4">🎟️</div>
+                <h3 class="text-2xl font-semibold mb-4">Participant</h3>
+                <p class="text-gray-600">Find exciting events, register, and enjoy the experience.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Upcoming Events Section -->
+<section class="py-24 bg-white">
+    <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center mb-12">
+            Upcoming Events
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Event 1 -->
+            <div class="bg-gray-100 rounded-lg shadow-md p-6">
+                <img src="{% static 'images/event_static_1.jpg' %}" class="w-full h-40 object-cover rounded-md mb-4">
+                <h3 class="text-xl font-semibold">Tech Conference 2025</h3>
+                <p class="text-gray-600">March 15, 2025 - San Francisco</p>
+            </div>
+            <!-- Event 2 -->
+            <div class="bg-gray-100 rounded-lg shadow-md p-6">
+                <img src="{% static 'images/event_static_2.jpg' %}" class="w-full h-40 object-cover rounded-md mb-4">
+                <h3 class="text-xl font-semibold">Music Fest 2025</h3>
+                <p class="text-gray-600">April 10, 2025 - New York</p>
+            </div>
+            <!-- Event 3 -->
+            <div class="bg-gray-100 rounded-lg shadow-md p-6">
+                <img src="{% static 'images/event_static_3.jpg' %}" class="w-full h-40 object-cover rounded-md mb-4">
+                <h3 class="text-xl font-semibold">Business Summit</h3>
+                <p class="text-gray-600">May 5, 2025 - London</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-24 bg-gray-100">
+    <div class="container mx-auto px-6 text-center">
+        <h2 class="text-3xl font-bold mb-12">
+            What Our Users Say
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Testimonial 1 -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="text-gray-600 italic">"This platform made organizing events super easy. Highly recommend!"</p>
+                <h4 class="mt-4 font-semibold">- Alex Johnson</h4>
+            </div>
+            <!-- Testimonial 2 -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="text-gray-600 italic">"Attending events has never been this smooth. Amazing experience!"</p>
+                <h4 class="mt-4 font-semibold">- Sarah Lee</h4>
+            </div>
+            <!-- Testimonial 3 -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="text-gray-600 italic">"User-friendly and packed with great features. Love it!"</p>
+                <h4 class="mt-4 font-semibold">- Michael Smith</h4>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Call to Action -->
-<section class="bg-gray-200 py-24 md:py-32">
-    <div class="container mx-auto px-6 text-center">
+<section class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white py-24 md:py-32 text-center">
+    <div class="container mx-auto px-6">
         <h2 class="text-3xl font-bold mb-6">
             Ready to Elevate Your Event Experience?
         </h2>
-        <p class="text-xl mb-12">
+        <p class="text-lg mb-8">
             Join our platform and start hosting or attending events today!
         </p>
-        <a href="#" class="bg-blue-500 text-white px-8 py-4 rounded-md font-semibold text-lg hover:bg-blue-600 transition duration-300">
-            Get Started
+        <a href="#" class="bg-white text-blue-600 px-6 py-3 rounded-md font-semibold text-lg hover:bg-gray-100 transition duration-300">
+            Sign Up Now
         </a>
     </div>
 </section>
+
 {% endblock content %}
-
-

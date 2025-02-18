@@ -27,7 +27,7 @@ for i, name in enumerate(event_names):
     event = Event.objects.create(
         name=name,
         description=f'{name} event description.',
-        date=timezone.now().date() + timedelta(days=random.randint(-5, 10)),  # Some past, some future
+        date=timezone.now().date() + timedelta(days=random.randint(-5, 10)),  
         time=time(hour=random.randint(9, 18), minute=0),
         location=f'Location {i+1}',
         category=random.choice(categories)
@@ -46,7 +46,6 @@ for name in participant_names:
         name=name,
         email=f"{name.lower().replace(' ', '.')}@example.com"
     )
-    # Each participant attends 2-4 random events
     participant.events.set(random.sample(events, k=random.randint(2, 4)))
 
 print("✅ Dummy data created successfully!")

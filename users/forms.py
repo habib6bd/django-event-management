@@ -8,6 +8,7 @@ from django.contrib.auth.forms import AuthenticationForm
 
 
 class RegisterForm(UserCreationForm):
+    password1 = forms.CharField(label="Password", widget=forms.PasswordInput)
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'password1', 'password2', 'email']
@@ -18,7 +19,7 @@ class RegisterForm(UserCreationForm):
             self.fields[fieldname].help_text = None
 
 class CustomRegistrationForm(StyledFormMixin, forms.ModelForm):
-    password1 = forms.CharField(widget=forms.PasswordInput)
+    password1 = forms.CharField(label="Password", widget=forms.PasswordInput)
     confirm_password = forms.CharField(widget=forms.PasswordInput)
     class Meta:
         model = User

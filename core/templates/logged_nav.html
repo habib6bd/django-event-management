@@ -3,68 +3,74 @@
   <nav class="container mx-auto px-6 py-3">
     <div class="flex justify-between items-center">
       <a href="{% url 'home' %}" class="text-xl font-bold text-gray-800">EventBD</a>
+      
+      <!-- Desktop Navigation -->
       <div class="hidden md:flex space-x-4">
         {% if is_admin %}
-            <!-- Admin specific content -->
-            <a href="{% url 'admin-dashboard' %}">Admin Dashboard</a>
+          <a href="{% url 'admin-dashboard' %}">Admin Dashboard</a>
         {% endif %}
-
         {% if is_organizer %}
-            <!-- Organizer specific content -->
-            <a href="{% url 'organizer-dashboard' %}">Organizer Dashboard</a>
+          <a href="{% url 'organizer-dashboard' %}">Organizer Dashboard</a>
         {% endif %}
-
         {% if is_participant %}
-            <!-- Participant specific content -->
-            <a href="{% url 'participant-dashboard' %}">Participant Dashboard</a>
-            <!-- Event List link for participant -->
-            <a href="{% url 'event_list' %}" class="text-blue-500 hover:text-blue-700">Event List</a>
+          <a href="{% url 'participant-dashboard' %}">Participant Dashboard</a>
+          <a href="{% url 'event_list' %}" class="text-blue-500 hover:text-blue-700">Event List</a>
         {% endif %}
-    </div>
+      </div>
+
       <div class="flex items-center">
+        <!-- User Menu -->
         <div class="relative">
           <button id="user-menu-button" class="flex items-center focus:outline-none">
-            <img class="h-8 w-8 rounded-full object-cover" src="{% static 'images/user_default.png' %}"
-              alt="User avatar" />
+            <img class="h-8 w-8 rounded-full object-cover" src="{% static 'images/user_default.png' %}" alt="User avatar" />
           </button>
-          <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden">
+          
+          <div id="user-menu-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 !z-[999] hidden">
             {% if is_admin %}
-            <!-- Admin specific content -->
-            <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{% url 'admin-dashboard' %}">Admin Dashboard</a>
+              <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{% url 'admin-dashboard' %}">Admin Dashboard</a>
             {% endif %}
-
             {% if is_organizer %}
-            <!-- Organizer specific content -->
-            <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{% url 'organizer-dashboard' %}">Organizer Dashboard</a>
+              <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{% url 'organizer-dashboard' %}">Organizer Dashboard</a>
             {% endif %}
-
             {% if is_participant %}
-            <!-- Participant specific content -->
-            <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{% url 'participant-dashboard' %}">Participant Dashboard</a>
+              <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{% url 'participant-dashboard' %}">Participant Dashboard</a>
             {% endif %}
             <form method="post" action="{% url 'logout' %}">
               {% csrf_token %}
-              <button class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                Logout
-              </button>
+              <button class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
             </form>
           </div>
         </div>
+
+        <!-- Mobile Menu Button -->
         <div class="md:hidden ml-4">
           <button id="menu-toggle" class="text-gray-600 hover:text-gray-800 focus:outline-none">
-            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
             </svg>
           </button>
         </div>
       </div>
     </div>
-    <div id="mobile-menu" class="md:hidden hidden mt-4">
-      <a href="{% url 'organizer-dashboard' %}" class="block py-2 text-gray-600 hover:text-gray-800">Dashboard</a>
-      <a href="#" class="block py-2 text-gray-600 hover:text-gray-800">Events</a>
 
-      <a href="{% url 'create_event' %}" class="block py-2 text-gray-600 hover:text-gray-800">Create Group</a>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden mt-4 bg-white shadow-lg rounded-md p-4">
+      {% if is_admin %}
+        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{% url 'admin-dashboard' %}">Admin Dashboard</a>
+      {% endif %}
+      {% if is_organizer %}
+        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{% url 'organizer-dashboard' %}">Organizer Dashboard</a>
+      {% endif %}
+      {% if is_participant %}
+        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{% url 'participant-dashboard' %}">Participant Dashboard</a>
+        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{% url 'event_list' %}">Event List</a>
+      {% endif %}
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
+      </form>
     </div>
   </nav>
 </header>
+
+
