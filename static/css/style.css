@@ -3,4 +3,8 @@
     background-size: cover;
     background-position: bottom;
     background-repeat: no-repeat;
+    z-index: -999;
+}
+#user-menu {
+    z-index: 99999;
 }
