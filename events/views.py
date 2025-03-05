@@ -6,6 +6,9 @@ from django.utils import timezone
 from django.contrib import messages
 from .models import Event, Category
 from .forms import EventForm
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.views.generic import DetailView, CreateView, DeleteView
+from django.urls import reverse_lazy, reverse
 
 @login_required
 def event_list(request):
@@ -36,28 +39,46 @@ def event_list(request):
     }
     return render(request, 'events/event_list.html', context)
 
-@login_required
-def event_detail(request, pk):
-    event = get_object_or_404(Event, pk=pk)
-    context = {'event': event}
-    return render(request, 'events/event_detail.html', context)
+# @login_required
+# def event_detail(request, pk):
+#     event = get_object_or_404(Event, pk=pk)
+#     context = {'event': event}
+#     return render(request, 'events/event_detail.html', context)
 
+#Class Based View
+class EventDetailView(LoginRequiredMixin, DetailView):
+    model = Event
+    template_name = 'events/event_detail.html'
+    context_object_name = 'event'
 
 # Create Event (Only Organizer)
-@login_required
-@permission_required('events.add_event', login_url='no-permission')
-def event_create(request):
-    if request.method == 'POST':
-        form = EventForm(request.POST, request.FILES)
-        if form.is_valid():
-            event = form.save(commit=False)
-            event.organizer = request.user  # Assign logged-in user as organizer
-            event.save()
-            messages.success(request, "Event created successfully!")
-            return redirect('event_list')
-    else:
-        form = EventForm()
-    return render(request, 'events/event_form.html', {'form': form})
+# @login_required
+# @permission_required('events.add_event', login_url='no-permission')
+# def event_create(request):
+#     if request.method == 'POST':
+#         form = EventForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             event = form.save(commit=False)
+#             event.organizer = request.user  # Assign logged-in user as organizer
+#             event.save()
+#             messages.success(request, "Event created successfully!")
+#             return redirect('event_list')
+#     else:
+#         form = EventForm()
+#     return render(request, 'events/event_form.html', {'form': form})
+
+#Class Based View
+class EventCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    model = Event
+    form_class = EventForm
+    template_name = 'events/event_form.html'
+    permission_required = 'events.add_event'
+    success_url = reverse_lazy('event_list')  # Redirect after success
+
+    def form_valid(self, form):
+        form.instance.organizer = self.request.user  # Assign logged-in user as organizer
+        messages.success(self.request, "Event created successfully!")
+        return super().form_valid(form)
 
 # Update Event (Only Organizer)
 @login_required
@@ -80,20 +101,44 @@ def event_update(request, pk):
     return render(request, 'events/event_form.html', {'form': form})
 
 # Delete Event (Only Organizer)
-@login_required
-@permission_required('events.delete_event', login_url='no-permission')
-def event_delete(request, pk):
-    event = get_object_or_404(Event, pk=pk)
+# @login_required
+# @permission_required('events.delete_event', login_url='no-permission')
+# def event_delete(request, pk):
+#     event = get_object_or_404(Event, pk=pk)
 
-    if request.user != event.organizer:
-        messages.error(request, "You don't have permission to delete this event.")
+#     # Check if the user has the "Organizer" role
+#     if not request.user.groups.filter(name="Organizer").exists():
+#         messages.error(request, "You don't have permission to delete this event.")
+#         return redirect('event_list')
+
+#     if request.method == 'POST':
+#         event.delete()
+#         messages.success(request, "Event deleted successfully!")
+#         return redirect('organizer-dashboard')
+
+#     return render(request, 'events/event_confirm_delete.html', {'event': event})      
+
+
+#Class based viewclass 
+class EventDeleteView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Event
+    template_name = 'events/event_confirm_delete.html'
+    permission_required = 'events.delete_event'
+    context_object_name = 'event'
+
+    def test_func(self):
+        """Ensure the user is in the 'Organizer' group before allowing deletion"""
+        return self.request.user.groups.filter(name="Organizer").exists()
+
+    def handle_no_permission(self):
+        """Redirect if the user lacks permissions"""
+        messages.error(self.request, "You don't have permission to delete this event.")
         return redirect('event_list')
 
-    if request.method == 'POST':
-        event.delete()
-        messages.success(request, "Event deleted successfully!")
-        return redirect('dashboard')
-    return render(request, 'events/event_confirm_delete.html', {'event': event})
+    def get_success_url(self):
+        """Redirect to the dashboard after deletion"""
+        messages.success(self.request, "Event deleted successfully!")
+        return reverse('organizer-dashboard')
 
 # Total Participants Count
 def total_participants(request):

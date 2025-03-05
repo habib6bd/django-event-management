@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import login, logout
 from users.forms import CustomRegistrationForm, AssignRoleForm, createGroupForm
@@ -7,29 +7,18 @@ from users.forms import LoginForm
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Prefetch
+from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
+from django.views.generic import FormView
+from django.urls import reverse
+from users.forms import AssignRoleForm
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView
 
 
 
 #Test for users
 def is_admin(user):
     return user.groups.filter(name='Admin').exists()
-
-# def sign_up(request):
-#     form = CustomRegistrationForm()
-#     if request.method == 'POST':
-#         form = CustomRegistrationForm(request.POST)
-#         if form.is_valid():
-#             user = form.save(commit=False)
-#             user.set_password(form.cleaned_data.get('password1'))
-#             user.is_active = False
-#             user.save()
-#             print(f"User created: {user.username}, Email: {user.email}")
-#             messages.success(request, 'A confirmation mail sent. Please check your email')
-#             return redirect('sign-in')
-#         else:
-#             print("Form is not valid")
-            
-#     return render(request, 'registration/register.html', {"form": form})
 
 def sign_up(request):
     form = CustomRegistrationForm()
@@ -94,20 +83,46 @@ def admin_dashboard(request):
 
     return render(request, 'admin/dashboard.html', {"users": users})
 
-@user_passes_test(is_admin, login_url='no-permission')   
-def assign_role(request, user_id):
-    user = User.objects.get(id=user_id)
-    form = AssignRoleForm
+# @user_passes_test(is_admin, login_url='no-permission')   
+# def assign_role(request, user_id):
+#     user = User.objects.get(id=user_id)
+#     form = AssignRoleForm
 
-    if request.method == 'POST':
-        form = AssignRoleForm(request.POST)
-        if form.is_valid():
-            role = form.cleaned_data.get('role')
-            user.groups.clear() #Remove old roles
-            user.groups.add(role)
-            messages.success(request, f"User {user.username} has been assigned to the {role.name} role")
-            return redirect('admin-dashboard')
-    return render(request, 'admin/assign_role.html', {"form": form})
+#     if request.method == 'POST':
+#         form = AssignRoleForm(request.POST)
+#         if form.is_valid():
+#             role = form.cleaned_data.get('role')
+#             user.groups.clear() #Remove old roles
+#             user.groups.add(role)
+#             messages.success(request, f"User {user.username} has been assigned to the {role.name} role")
+#             return redirect('admin-dashboard')
+#     return render(request, 'admin/assign_role.html', {"form": form})
+
+#Class Based View
+class AssignRoleView(LoginRequiredMixin, UserPassesTestMixin, FormView):
+    template_name = 'admin/assign_role.html'
+    form_class = AssignRoleForm
+
+    def test_func(self):
+        """Only allow admins to access this view"""
+        return is_admin(self.request.user)
+
+    def form_valid(self, form):
+        """Process the role assignment"""
+        user_id = self.kwargs['user_id']
+        user = get_object_or_404(User, id=user_id)
+
+        role = form.cleaned_data.get('role')
+        user.groups.clear()  # Remove old roles
+        user.groups.add(role)
+
+        messages.success(self.request, f"User {user.username} has been assigned to the {role.name} role")
+        return redirect('admin-dashboard')
+
+    def handle_no_permission(self):
+        """Redirect unauthorized users"""
+        messages.error(self.request, "You don't have permission to assign roles.")
+        return redirect('no-permission')
 
 @user_passes_test(is_admin, login_url='no-permission')   
 def create_group(request):
@@ -121,8 +136,18 @@ def create_group(request):
             return redirect('create-group')
     return render(request, 'admin/create_group.html', {'form': form})
 
-@user_passes_test(is_admin, login_url='no-permission')   
-def group_list(request):
-    groups = Group.objects.prefetch_related('permissions').all()
-    return render(request, 'admin/group_list.html', {'groups': groups})
+# @user_passes_test(is_admin, login_url='no-permission')   
+# def group_list(request):
+#     groups = Group.objects.prefetch_related('permissions').all()
+#     return render(request, 'admin/group_list.html', {'groups': groups})
+
+#Class based View
+@method_decorator(user_passes_test(is_admin, login_url='no-permission'), name='dispatch')
+class GroupListView(ListView):
+    model = Group
+    template_name = 'admin/group_list.html'
+    context_object_name = 'groups'
+
+    def get_queryset(self):
+        return Group.objects.prefetch_related('permissions').all()
 
