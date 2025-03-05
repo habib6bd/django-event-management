@@ -13,6 +13,7 @@ from django.urls import reverse
 from users.forms import AssignRoleForm
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView
+from django.views.generic import TemplateView
 
 
 
@@ -150,4 +151,21 @@ class GroupListView(ListView):
 
     def get_queryset(self):
         return Group.objects.prefetch_related('permissions').all()
+
+class ProfileView(TemplateView):
+    template_name = 'accounts/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+
+        context['username'] = user.username
+        context['email'] = user.email
+        context['name'] = user.get_full_name()
+
+        context['member_since'] = user.date_joined
+        context['last_login'] = user.last_login
+        return context
+
+
 
