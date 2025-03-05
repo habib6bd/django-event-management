@@ -116,6 +116,8 @@ WSGI_APPLICATION = 'event_management.wsgi.application'
 #     }
 # }
 # Replace the SQLite DATABASES configuration with PostgreSQL:
+
+#For onrender database
 DATABASES = {
     'default': dj_database_url.config(
         # Replace this value with your local database's connection string.
@@ -164,6 +166,8 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
+
+AUTH_USER_MODEL = 'users.CustomUser'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'

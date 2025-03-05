@@ -1,6 +1,8 @@
 from django import forms
 from events.models import Event
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # Styled Form Mixin
 class StyledFormMixin:
