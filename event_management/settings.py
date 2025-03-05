@@ -118,14 +118,24 @@ WSGI_APPLICATION = 'event_management.wsgi.application'
 # Replace the SQLite DATABASES configuration with PostgreSQL:
 
 #For onrender database
-DATABASES = {
-    'default': dj_database_url.config(
-        # Replace this value with your local database's connection string.
-        default='postgresql://event_manager_db_j149_user:ZH4cC8SlLIQI7loP51zWvjDdM7vIzKDs@dpg-cuh08nbtq21c73f56n8g-a.oregon-postgres.render.com/event_manager_db_j149',
-        conn_max_age=600
-    )
-}
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         # Replace this value with your local database's connection string.
+#         default='postgresql://event_manager_db_j149_user:ZH4cC8SlLIQI7loP51zWvjDdM7vIzKDs@dpg-cuh08nbtq21c73f56n8g-a.oregon-postgres.render.com/event_manager_db_j149',
+#         conn_max_age=600
+#     )
+# }
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres.tqodnbiquzvmbqwuwplf',
+        'PASSWORD': '#89A%;lk89',  # এখানে আপনার আসল পাসওয়ার্ড দিন
+        'HOST': 'aws-0-ap-southeast-1.pooler.supabase.com',
+        'PORT': '6543',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
