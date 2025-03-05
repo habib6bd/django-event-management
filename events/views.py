@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.db.models import Count, Q
 from django.utils import timezone
 from django.contrib import messages
@@ -9,6 +9,8 @@ from .forms import EventForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.views.generic import DetailView, CreateView, DeleteView
 from django.urls import reverse_lazy, reverse
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 @login_required
 def event_list(request):

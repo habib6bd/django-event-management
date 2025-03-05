@@ -105,24 +105,26 @@ WSGI_APPLICATION = 'event_management.wsgi.application'
 #     }
 # }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': config('DB_NAME', default=''),
-#         'USER': config('DB_USER', default=''),
-#         'PASSWORD': config('DB_PASSWORD', default=''),
-#         'HOST': config('DB_HOST', default='localhost'),
-#         'PORT': config('DB_PORT', cast = int)
-#     }
-# }
-# Replace the SQLite DATABASES configuration with PostgreSQL:
 DATABASES = {
-    'default': dj_database_url.config(
-        # Replace this value with your local database's connection string.
-        default='postgresql://event_manager_db_j149_user:ZH4cC8SlLIQI7loP51zWvjDdM7vIzKDs@dpg-cuh08nbtq21c73f56n8g-a.oregon-postgres.render.com/event_manager_db_j149',
-        conn_max_age=600
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME', default=''),
+        'USER': config('DB_USER', default=''),
+        'PASSWORD': config('DB_PASSWORD', default=''),
+        'HOST': config('DB_HOST', default='localhost'),
+        'PORT': config('DB_PORT', cast = int)
+    }
 }
+# Replace the SQLite DATABASES configuration with PostgreSQL:
+
+#For onrender database
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         # Replace this value with your local database's connection string.
+#         default='postgresql://event_manager_db_j149_user:ZH4cC8SlLIQI7loP51zWvjDdM7vIzKDs@dpg-cuh08nbtq21c73f56n8g-a.oregon-postgres.render.com/event_manager_db_j149',
+#         conn_max_age=600
+#     )
+# }
 
 
 # Password validation
@@ -165,6 +167,8 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
 
+AUTH_USER_MODEL = 'users.CustomUser'
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 # Default primary key field type
@@ -179,7 +183,7 @@ EMAIL_PORT = config('EMAIL_PORT')
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
-FRONTEND_URL = 'https://event-management-dc3f.onrender.com'
-# FRONTEND_URL = 'http://127.0.0.1:8000'
+# FRONTEND_URL = 'https://event-management-dc3f.onrender.com'
+FRONTEND_URL = 'http://127.0.0.1:8000'
 
 LOGIN_URL = 'sign-in'
